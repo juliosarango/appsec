@@ -1,0 +1,9 @@
+# Reglas por defecto de Gitleaks, más una sola exclusión por ruta.
+[extend]
+useDefault = true
+
+[[allowlists]]
+# Reportes generados por la demo: guardan SHA de commits (40 hex) que la regla
+# sourcegraph-access-token confunde con tokens. No es código fuente.
+description = "Reportes de respaldo generados"
+paths = ['''^demo/respaldo/''']
