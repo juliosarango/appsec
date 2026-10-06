@@ -12,6 +12,8 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 H=.github/herramientas
 img() { "$H/imagen.sh" "$1"; }
+# Con tu uid, para que los reportes no queden con dueño root.
+YO=(--user "$(id -u):$(id -g)" -e HOME=/tmp)
 
 rama=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo local)
 OUT=${OUT:-reportes/$rama}
@@ -53,7 +55,7 @@ preparar() {
 
 gitleaks() {
   titulo "1/5 Secretos · Gitleaks (historial completo de git)"
-  docker run --rm -v "$PWD:/repo" -w /repo "$(img gitleaks)" \
+  docker run --rm "${YO[@]}" -v "$PWD:/repo" -w /repo "$(img gitleaks)" \
     git /repo --redact --no-banner --exit-code 0 -v \
     --report-format sarif --report-path "/repo/$OUT/gitleaks.sarif"
   evaluar gitleaks "$OUT/gitleaks.sarif"
@@ -70,18 +72,18 @@ kics() {
 
 osv() {
   titulo "3/5 Dependencias · OSV-Scanner (app/package-lock.json)"
-  docker run --rm -v "$PWD:/repo" -w /repo "$(img osv)" \
+  docker run --rm "${YO[@]}" -v "$PWD:/repo" -w /repo "$(img osv)" \
     scan source -r app --format table
-  docker run --rm -v "$PWD:/repo" -w /repo "$(img osv)" \
+  docker run --rm "${YO[@]}" -v "$PWD:/repo" -w /repo "$(img osv)" \
     scan source -r app --format json --output "$OUT/osv.json" >/dev/null 2>&1
-  docker run --rm -v "$PWD:/repo" -w /repo "$(img osv)" \
+  docker run --rm "${YO[@]}" -v "$PWD:/repo" -w /repo "$(img osv)" \
     scan source -r app --format sarif --output "$OUT/osv.sarif" >/dev/null 2>&1
   evaluar osv "$OUT/osv.json"
 }
 
 semgrep() {
   titulo "4/5 Código · Semgrep CE (app/src)"
-  docker run --rm -v "$PWD:/src" -w /src "$(img semgrep)" semgrep scan \
+  docker run --rm "${YO[@]}" -v "$PWD:/src" -w /src "$(img semgrep)" semgrep scan \
     --config p/javascript --config p/expressjs --config p/nodejsscan \
     --metrics=off --sarif-output="$OUT/semgrep.sarif" --json-output="$OUT/semgrep.json" \
     app/src
