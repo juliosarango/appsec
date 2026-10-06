@@ -15,7 +15,7 @@ Demo de la charla de **V-SandBox**: un pipeline de GitHub Actions que protege el
 | SAST | [Semgrep CE](https://github.com/semgrep/semgrep) | Busca inyecciones y `eval` en `app/src` con reglas públicas. | Con severidad alta (`ERROR`) |
 | DAST | [ZAP baseline](https://www.zaproxy.org/docs/docker/baseline-scan/) | Escaneo pasivo contra [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/). | No: solo reporta |
 
-Las cuatro primeras corren en paralelo. ZAP corre solo si las cuatro pasan. Todas suben SARIF a **Security → Code scanning**, cada una con su propia categoría. La política de bloqueo está en un solo archivo, [`.github/herramientas/politica.sh`](.github/herramientas/politica.sh), que comparten el CI y la ejecución local.
+Las cuatro primeras corren en paralelo. ZAP corre solo si las cuatro pasan. Las cuatro estáticas suben SARIF a **Security → Code scanning**, cada una con su propia categoría. ZAP publica sus reportes (HTML, JSON y SARIF) como artifact: Code scanning solo acepta hallazgos ubicados en archivos del repo, y los de ZAP están en URLs de la app en ejecución. La política de bloqueo está en un solo archivo, [`.github/herramientas/politica.sh`](.github/herramientas/politica.sh), que comparten el CI y la ejecución local.
 
 ## Replicarlo en tu fork
 

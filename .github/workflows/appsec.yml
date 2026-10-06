@@ -15,7 +15,7 @@ concurrency:
   group: appsec-${{ github.ref }}
   cancel-in-progress: true
 
-# Patrón de cada job: escanear -> resumir -> subir SARIF -> aplicar política.
+# Patrón de cada job estático: escanear -> resumir -> subir SARIF -> aplicar política.
 # La política va al final para que el SARIF se suba aunque el build falle.
 # Las imágenes se fijan por digest en .github/herramientas/Dockerfile
 # (un tag se puede reescribir: pasó con checkmarx/kics en abril de 2026).
@@ -75,12 +75,19 @@ jobs:
             --report-formats json,sarif --ignore-on-exit results \
             --disable-secrets --no-progress
 
+      # KICS repite entradas de la taxonomía CWE y GitHub rechaza el SARIF por esquema.
+      # Se quitan duplicados conservando el orden: los resultados apuntan a Categories por índice.
+      - name: Corregir SARIF de KICS
+        run: |
+          jq '.runs[].taxonomies[]?.taxa |= reduce .[] as $t ([]; if index([$t]) then . else . + [$t] end)' \
+            results/kics.sarif > results/kics.fixed.sarif
+
       - name: Resumen
         run: .github/herramientas/politica.sh resumen kics results/kics.json >> "$GITHUB_STEP_SUMMARY"
 
       - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
         with:
-          sarif_file: results/kics.sarif
+          sarif_file: results/kics.fixed.sarif
           category: kics
 
       - name: Política (alta o crítica rompe el build)
@@ -174,9 +181,9 @@ jobs:
     needs: [gitleaks, kics, osv, semgrep]
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # No sube a Code scanning (ver el final del job), así que no necesita security-events.
     permissions:
       contents: read
-      security-events: write
     services:
       juice-shop:
         # Duplicada en .github/herramientas/Dockerfile: aquí no se puede leer un archivo.
@@ -217,7 +224,9 @@ jobs:
           alta=$(jq '[.site[].alerts[] | select(.riskcode == "3")] | length' zap/zap.json)
           if [ "$alta" -gt 0 ]; then echo "::warning::ZAP reporta $alta alerta(s) de riesgo alto."; fi
 
-      # El SARIF de ZAP apunta a URLs, no a archivos del repo; el HTML es el reporte legible.
+      # Code scanning solo acepta ubicaciones que sean archivos del repo ("file://") y ZAP
+      # reporta URLs ("http://"): GitHub rechaza ese SARIF. Se publica como artifact; el SARIF
+      # sigue sirviendo para plataformas que sí aceptan URLs (DefectDojo, por ejemplo).
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -227,8 +236,3 @@ jobs:
             zap/zap.json
             zap/zap.md
             zap/zap.sarif.json
-
-      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
-        with:
-          sarif_file: zap/zap.sarif.json
-          category: zap-baseline

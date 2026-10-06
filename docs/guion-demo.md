@@ -5,7 +5,7 @@ Todo se ejecuta en vivo. Cada etapa tiene un **punto de pausa** (⏸) para expli
 ## Antes de la charla (el día anterior)
 
 1. Hacer push de `main` y `fix` y esperar a que las dos ejecuciones de Actions terminen. **Guardar los enlaces** de ambas ejecuciones: son el plan B del pipeline completo.
-2. Revisar que la pestaña **Security → Code scanning** muestre alertas de las cinco categorías (`gitleaks`, `kics`, `osv-scanner`, `semgrep`, `zap-baseline`).
+2. Revisar que la pestaña **Security → Code scanning** muestre alertas de las cuatro categorías estáticas (`gitleaks`, `kics`, `osv-scanner`, `semgrep`), y que la ejecución de `fix` tenga el artifact `zap-report`.
 3. Descargar las imágenes (ZAP pesa ~2.4 GB):
    ```bash
    demo/demo.sh preparar
@@ -26,7 +26,7 @@ Todo se ejecuta en vivo. Cada etapa tiene un **punto de pausa** (⏸) para expli
 | 6 | La corrección | `git diff main fix` | Un commit, una corrección por hallazgo. | Mismo comando: no depende de la red |
 | 7 | Excepciones | `.gitleaksignore` y `.zap/rules.tsv` en `fix` | El secreto se borró del código, pero sigue en el historial. La excepción se fija por fingerprint y lleva el motivo. | Mostrar solo los archivos |
 | 8 | Pipeline verde | Abrir un PR `fix → main` o lanzar **Run workflow** en `fix` | El PR dispara el pipeline completo. ZAP corre contra Juice Shop y reporta sin bloquear. | Enlace de la ejecución verde |
-| 9 | DAST | `git switch fix && demo/demo.sh zap` | Baseline es pasivo. El hook genera SARIF con la plantilla oficial de ZAP. `IGNORE: 1` es la excepción documentada. | `demo/respaldo/fix/zap/zap.html` |
+| 9 | DAST | `git switch fix && demo/demo.sh zap` | Baseline es pasivo. `IGNORE: 1` es la excepción documentada. ZAP no aparece en Security: Code scanning rechaza ubicaciones `http://` (solo acepta archivos del repo), así que su reporte va como artifact. | `demo/respaldo/fix/zap/zap.html` |
 
 ## Dos falsos negativos/positivos que vale la pena contar
 
