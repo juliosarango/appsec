@@ -66,7 +66,7 @@ gitleaks() {
 
 kics() {
   titulo "2/5 IaC · KICS (infra/)"
-  docker run --rm -v "$PWD:/repo" "$(img kics)" scan \
+  docker run --rm "${YO[@]}" -v "$PWD:/repo" "$(img kics)" scan \
     -p /repo/infra -o "/repo/$OUT" --output-name kics \
     --report-formats json,sarif,html --ignore-on-exit results \
     --disable-secrets --no-progress
