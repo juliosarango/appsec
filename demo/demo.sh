@@ -9,7 +9,7 @@
 # Los reportes quedan en reportes/<rama>/ y un resumen en reportes/<rama>/resumen.md.
 set -uo pipefail
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 1
 H=.github/herramientas
 img() { "$H/imagen.sh" "$1"; }
 # Con tu uid, para que los reportes no queden con dueño root.
@@ -112,6 +112,7 @@ if [ "${1:-}" = preparar ]; then preparar; exit; fi
 
 [ $# -gt 0 ] && ETAPAS=("$@")
 mkdir -p "$OUT"
+# shellcheck disable=SC2016 # las comillas invertidas son Markdown
 printf '# Resultados en rama `%s` (%s)\n\n' "$rama" "$(date '+%Y-%m-%d %H:%M')" > "$OUT/resumen.md"
 
 for e in "${ETAPAS[@]}"; do

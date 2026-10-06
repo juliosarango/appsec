@@ -30,10 +30,14 @@ case $herramienta in
     titulo="Semgrep"; cols="Alta (ERROR) | Media (WARNING) | Baja (INFO)"
     vals="$(c ERROR) | $(c WARNING) | $(c INFO)"; bloq=$(c ERROR) ;;
   zap)
-    # Baseline es pasivo: reporta, nunca bloquea.
-    c() { jq "[.site[].alerts[] | select(.riskcode == \"$1\")] | length" "$reporte"; }
-    titulo="ZAP baseline (no bloquea)"; cols="Alta | Media | Baja | Info"
-    vals="$(c 3) | $(c 2) | $(c 1) | $(c 0)"; bloq=0 ;;
+    # Baseline es pasivo: reporta, nunca bloquea. El JSON incluye las alertas que
+    # rules.tsv marca como IGNORE, así que se descuentan y se muestran aparte.
+    reglas="$(dirname "$reporte")/rules.tsv"
+    ign=$( if [ -f "$reglas" ]; then awk -F'\t' '$2 == "IGNORE" { print $1 }' "$reglas"; fi | jq -R . | jq -sc .)
+    c() { jq --argjson ign "$ign" "[.site[].alerts[] | select(.riskcode == \"$1\") | select(.pluginid as \$p | \$ign | index(\$p) | not)] | length" "$reporte"; }
+    ni=$(jq --argjson ign "$ign" '[.site[].alerts[] | select(.pluginid as $p | $ign | index($p))] | length' "$reporte")
+    titulo="ZAP baseline (no bloquea)"; cols="Alta | Media | Baja | Info | Ignoradas (rules.tsv)"
+    vals="$(c 3) | $(c 2) | $(c 1) | $(c 0) | $ni"; bloq=0 ;;
   *) echo "herramienta desconocida: $herramienta" >&2; exit 2 ;;
 esac
 
