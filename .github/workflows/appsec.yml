@@ -67,6 +67,8 @@ jobs:
 
       - name: Escanear IaC
         run: |
+          # KICS corre como uid 1000 y el workspace del runner es de otro uid.
+          mkdir -p results && chmod 777 results
           # --ignore-on-exit results: quien decide si se rompe el build es la política.
           docker run --rm -v "$PWD:/repo" "$(.github/herramientas/imagen.sh kics)" scan \
             -p /repo/infra -o /repo/results --output-name kics \

@@ -72,7 +72,7 @@ git diff main fix -- infra/    # solo una etapa
 
 Para verlo en el pipeline, abre un pull request de `fix` hacia `main`: el PR lanza las cinco etapas y debe salir en verde.
 
-`fix` también trae dos **excepciones justificadas**, cada una con su motivo:
+`fix` también trae dos **excepciones justificadas**, cada una con su motivo (en las dos ramas, [`.gitleaks.toml`](.gitleaks.toml) además excluye los reportes generados de `demo/respaldo/`):
 
 - [`.gitleaksignore`](.gitleaksignore): el token falso se borró del código, pero sigue en el historial de git. La excepción se fija por fingerprint (commit, archivo, regla y línea), así que un secreto nuevo vuelve a romper el build.
 - [`.zap/rules.tsv`](.zap/rules.tsv): la regla 10110 marca código del bundle de Juice Shop, que no es nuestro.
