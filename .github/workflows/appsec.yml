@@ -1,0 +1,232 @@
+name: appsec
+
+on:
+  push:
+    branches: [main, fix]
+  pull_request:
+  # Permite relanzar el pipeline en vivo durante la charla sin hacer un commit.
+  workflow_dispatch:
+
+# Mínimo privilegio: si una acción se compromete, el token no puede escribir en el repo.
+permissions:
+  contents: read
+
+concurrency:
+  group: appsec-${{ github.ref }}
+  cancel-in-progress: true
+
+# Patrón de cada job: escanear -> resumir -> subir SARIF -> aplicar política.
+# La política va al final para que el SARIF se suba aunque el build falle.
+# Las imágenes se fijan por digest en .github/herramientas/Dockerfile
+# (un tag se puede reescribir: pasó con checkmarx/kics en abril de 2026).
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Historial completo: borrar el secreto del código no lo borra de git.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Escanear secretos
+        run: |
+          # --redact: el valor del secreto no debe terminar en logs ni en SARIF.
+          # --exit-code 0: quien decide si se rompe el build es la política.
+          docker run --rm -v "$PWD:/repo" -w /repo "$(.github/herramientas/imagen.sh gitleaks)" \
+            git /repo --redact --no-banner --exit-code 0 \
+            --report-format sarif --report-path /repo/gitleaks.sarif
+
+      - name: Resumen
+        run: .github/herramientas/politica.sh resumen gitleaks gitleaks.sarif >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: gitleaks.sarif
+          category: gitleaks
+
+      - name: Política (cualquier secreto rompe el build)
+        run: |
+          n=$(.github/herramientas/politica.sh bloqueantes gitleaks gitleaks.sarif)
+          if [ "$n" -gt 0 ]; then echo "::error::Gitleaks encontró $n secreto(s)."; exit 1; fi
+
+  kics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Escanear IaC
+        run: |
+          # --ignore-on-exit results: quien decide si se rompe el build es la política.
+          docker run --rm -v "$PWD:/repo" "$(.github/herramientas/imagen.sh kics)" scan \
+            -p /repo/infra -o /repo/results --output-name kics \
+            --report-formats json,sarif --ignore-on-exit results \
+            --disable-secrets --no-progress
+
+      - name: Resumen
+        run: .github/herramientas/politica.sh resumen kics results/kics.json >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: results/kics.sarif
+          category: kics
+
+      - name: Política (alta o crítica rompe el build)
+        run: |
+          n=$(.github/herramientas/politica.sh bloqueantes kics results/kics.json)
+          if [ "$n" -gt 0 ]; then echo "::error::KICS encontró $n hallazgo(s) alto(s) o crítico(s)."; exit 1; fi
+
+  osv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # OSV-Scanner sale con 1 ante cualquier vulnerabilidad, sin importar la severidad;
+      # por eso continue-on-error y la política se aplica con el JSON.
+      # Ojo: la acción usa internamente ghcr.io/google/osv-scanner-action:v2.6.0 por tag,
+      # así que fijar la acción por SHA no fija esa imagen.
+      - name: Escanear dependencias (JSON)
+        continue-on-error: true
+        uses: google/osv-scanner-action/osv-scanner-action@a345acffa64b0eaede81a3d9aae6141214d9c8fc # v2.6.0
+        with:
+          scan-args: |-
+            --format=json
+            --output=osv.json
+            --recursive
+            ./app
+
+      - name: Escanear dependencias (SARIF)
+        continue-on-error: true
+        uses: google/osv-scanner-action/osv-scanner-action@a345acffa64b0eaede81a3d9aae6141214d9c8fc # v2.6.0
+        with:
+          scan-args: |-
+            --format=sarif
+            --output=osv.sarif
+            --recursive
+            ./app
+
+      - name: Resumen
+        run: .github/herramientas/politica.sh resumen osv osv.json >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: osv.sarif
+          category: osv-scanner
+
+      - name: Política (CVSS >= 7 rompe el build)
+        run: |
+          n=$(.github/herramientas/politica.sh bloqueantes osv osv.json)
+          if [ "$n" -gt 0 ]; then echo "::error::OSV-Scanner encontró $n vulnerabilidad(es) con CVSS >= 7."; exit 1; fi
+
+  semgrep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Escanear código
+        run: |
+          # Reglas públicas del registro de Semgrep: se descargan sin cuenta ni token.
+          # --metrics=off: no enviamos telemetría del repo.
+          docker run --rm -v "$PWD:/src" -w /src "$(.github/herramientas/imagen.sh semgrep)" semgrep scan \
+            --config p/javascript --config p/expressjs --config p/nodejsscan \
+            --metrics=off --sarif-output=semgrep.sarif --json-output=semgrep.json \
+            app/src
+
+      - name: Resumen
+        run: .github/herramientas/politica.sh resumen semgrep semgrep.json >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Política (alta rompe el build)
+        run: |
+          n=$(.github/herramientas/politica.sh bloqueantes semgrep semgrep.json)
+          if [ "$n" -gt 0 ]; then echo "::error::Semgrep encontró $n hallazgo(s) de severidad alta."; exit 1; fi
+
+  zap:
+    # DAST solo tiene sentido si el análisis estático pasó.
+    needs: [gitleaks, kics, osv, semgrep]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    services:
+      juice-shop:
+        # Duplicada en .github/herramientas/Dockerfile: aquí no se puede leer un archivo.
+        image: bkimminich/juice-shop:v20.2.0@sha256:8739101ade29358abb5469ee66ae78e582c97ed0a5543a4ad102e5fa5193526b
+        ports:
+          - 3000:3000
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # La imagen de Juice Shop no trae shell ni curl, así que no sirve un health-cmd.
+      - name: Esperar a Juice Shop
+        run: |
+          for _ in $(seq 60); do
+            curl -sf http://localhost:3000 >/dev/null && exit 0
+            sleep 2
+          done
+          echo "::error::Juice Shop no respondió a tiempo."
+          exit 1
+
+      - name: ZAP baseline
+        run: |
+          # ZAP corre como uid 1000 y el workspace del runner es de otro uid.
+          mkdir -p zap && chmod 777 zap && cp .zap/* zap/
+          cfg=()
+          if [ -f zap/rules.tsv ]; then cfg=(-c rules.tsv); fi
+          # -I: baseline reporta pero no rompe el build.
+          # El hook genera SARIF con la plantilla oficial de ZAP (baseline no tiene flag para SARIF).
+          docker run --rm --network host -v "$PWD/zap:/zap/wrk:rw" "$(.github/herramientas/imagen.sh zap)" \
+            zap-baseline.py -t http://localhost:3000 "${cfg[@]}" -I \
+            -J zap.json -r zap.html -w zap.md --hook=/zap/wrk/sarif_hook.py
+
+      - name: Resumen
+        run: |
+          .github/herramientas/politica.sh resumen zap zap/zap.json >> "$GITHUB_STEP_SUMMARY"
+          echo "> Baseline es pasivo: reporta y no rompe el build. Reporte HTML en el artifact \`zap-report\`." >> "$GITHUB_STEP_SUMMARY"
+          alta=$(jq '[.site[].alerts[] | select(.riskcode == "3")] | length' zap/zap.json)
+          if [ "$alta" -gt 0 ]; then echo "::warning::ZAP reporta $alta alerta(s) de riesgo alto."; fi
+
+      # El SARIF de ZAP apunta a URLs, no a archivos del repo; el HTML es el reporte legible.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: zap-report
+          path: |
+            zap/zap.html
+            zap/zap.json
+            zap/zap.md
+            zap/zap.sarif.json
+
+      - uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: zap/zap.sarif.json
+          category: zap-baseline

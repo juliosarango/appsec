@@ -1,0 +1,34 @@
+# EJEMPLO DE LO QUE NO HAY QUE HACER. Este archivo NO se ejecuta:
+# está en docs/, fuera de .github/workflows/.
+#
+# Así lucían muchos pipelines el 19 de marzo de 2026, cuando atacantes
+# reescribieron 75 de 76 tags de aquasecurity/trivy-action (CVE-2026-33634).
+# Un tag es un puntero mutable: quien controla el repo lo mueve a otro commit
+# y tu pipeline ejecuta código nuevo sin que cambies una línea.
+name: inseguro
+
+on: [push, pull_request]
+
+# Sin bloque permissions: el GITHUB_TOKEN hereda los permisos por defecto
+# del repo, que en repos antiguos incluyen escritura.
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      # Tag mutable y credenciales persistidas en .git/config: cualquier paso
+      # posterior (incluida una acción comprometida) puede leer el token.
+      - uses: actions/checkout@v4
+
+      # El tag apuntaba a un commit con un stealer de credenciales.
+      - uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+
+      # Wiz reportó un compromiso paralelo de esta acción.
+      - uses: checkmarx/kics-github-action@v2
+        with:
+          path: .
+
+      # "latest" en una imagen es el mismo problema que un tag de acción.
+      - run: docker run --rm -v "$PWD:/src" checkmarx/kics:latest scan -p /src

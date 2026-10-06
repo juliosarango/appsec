@@ -1,0 +1,17 @@
+{
+  "name": "vsandbox-demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App mínima con hallazgos plantados para la demo de AppSec de V-SandBox",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "lodash": "4.17.20"
+  }
+}

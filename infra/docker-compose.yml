@@ -1,0 +1,15 @@
+# INSEGURO A PROPÓSITO (estado "antes" de la demo).
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    # privileged desactiva casi todo el aislamiento del contenedor.
+    privileged: true
+    ports:
+      # Puertos de más y publicados en todas las interfaces.
+      - "3000:3000"
+      - "22:22"
+      - "9229:9229"
+    environment:
+      - NODE_ENV=development

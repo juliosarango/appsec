@@ -1,0 +1,34 @@
+# Fijar por SHA y digest congela versiones; Dependabot propone los PR para
+# actualizarlas, así no cambiamos seguridad por desactualización.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      acciones:
+        patterns: ["*"]
+
+  # Base del Dockerfile de la app.
+  - package-ecosystem: docker
+    directory: /infra
+    schedule:
+      interval: weekly
+
+  # Imágenes del docker-compose de la app.
+  - package-ecosystem: docker-compose
+    directory: /infra
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /app
+    schedule:
+      interval: weekly
+
+  # Imágenes de las herramientas del pipeline (ver el comentario en ese archivo).
+  - package-ecosystem: docker
+    directory: /.github/herramientas
+    schedule:
+      interval: weekly
