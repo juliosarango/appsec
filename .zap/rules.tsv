@@ -1,0 +1,4 @@
+# Excepción justificada de ZAP baseline (formato: id_regla<TAB>acción<TAB>motivo).
+# 10110 "Dangerous JS Functions" señala eval/innerHTML dentro del bundle minificado
+# de Angular que trae Juice Shop; no es código nuestro y no se puede corregir aquí.
+10110	IGNORE	(Bundle de terceros de Juice Shop; revisado el 2026-10-05)

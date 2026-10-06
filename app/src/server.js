@@ -1,5 +1,5 @@
 const express = require("express");
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
 const _ = require("lodash");
 const db = require("./db");
 const config = require("./config");
@@ -7,33 +7,36 @@ const config = require("./config");
 const app = express();
 app.use(express.json());
 
-// HALLAZGO PLANTADO (SAST): inyección SQL por concatenación.
-// Prueba: /users?id=1 OR 1=1
+// CORREGIDO: consulta parametrizada; el motor trata id como dato, nunca como SQL.
 app.get("/users", (req, res) => {
-  const rows = db.prepare("SELECT id, name, email FROM users WHERE id = " + req.query.id).all();
+  const rows = db.prepare("SELECT id, name, email FROM users WHERE id = ?").all(Number(req.query.id));
   res.json(rows);
 });
 
-// HALLAZGO PLANTADO (SAST): inyección de comandos.
-// Prueba: /ping?host=127.0.0.1;id
+// CORREGIDO: lista blanca del host y execFile sin shell; ";" ya no encadena comandos.
+const HOST = /^[a-zA-Z0-9.-]{1,253}$/;
 app.get("/ping", (req, res) => {
-  exec(`ping -c 1 ${req.query.host}`, (err, stdout) => {
+  const host = String(req.query.host || "");
+  if (!HOST.test(host)) return res.status(400).send("host inválido");
+  execFile("ping", ["-c", "1", host], (err, stdout) => {
     if (err) return res.status(500).send("error");
     res.type("text").send(stdout);
   });
 });
 
-// HALLAZGO PLANTADO (SAST): eval sobre entrada del usuario.
-// Prueba: POST /calc {"expr":"require('fs').readdirSync('/')"}
+// CORREGIDO: sin eval. Solo se aceptan operaciones aritméticas simples.
+const OPS = { "+": (a, b) => a + b, "-": (a, b) => a - b, "*": (a, b) => a * b, "/": (a, b) => a / b };
+const EXPR = /^\s*(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)\s*$/;
 app.post("/calc", (req, res) => {
-  const result = eval(req.body.expr);
-  res.json({ result });
+  const m = String(req.body.expr || "").match(EXPR);
+  if (!m) return res.status(400).json({ error: "expresión no soportada" });
+  res.json({ result: OPS[m[2]](Number(m[1]), Number(m[3])) });
 });
 
-// Usa lodash.template, afectado por CVE-2021-23337 en lodash < 4.17.21.
+// CORREGIDO: lodash actualizado (CVE-2021-23337) y respuesta JSON en vez de HTML.
 app.get("/hello", (req, res) => {
   const tpl = _.template("Hola, <%- name %>");
-  res.send(tpl({ name: req.query.name || "V-SandBox" }));
+  res.json({ saludo: tpl({ name: req.query.name || "V-SandBox" }) });
 });
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));

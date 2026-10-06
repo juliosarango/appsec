@@ -1,0 +1,6 @@
+# Excepción justificada (demo de excepciones).
+# El token de app/src/config.js es FALSO y se eliminó del código en la rama fix,
+# pero sigue en el historial de git (commit 3bcb78f). Si fuera real, el orden sería:
+# 1) revocarlo, 2) decidir si reescribir el historial, 3) recién entonces ignorarlo aquí.
+# El fingerprint fija commit, archivo, regla y línea: un secreto nuevo en otro lugar sigue rompiendo el build.
+3bcb78f389d1b91685cfd7c70117015deeea1b2e:app/src/config.js:github-pat:6

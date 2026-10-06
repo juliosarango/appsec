@@ -1,15 +1,24 @@
-# INSEGURO A PROPÓSITO (estado "antes" de la demo).
+# CORREGIDO (estado "después" de la demo).
 services:
   app:
     build:
       context: ..
       dockerfile: infra/Dockerfile
-    # privileged desactiva casi todo el aislamiento del contenedor.
-    privileged: true
+    # Solo el puerto de la app y solo en localhost; un proxy publica hacia afuera si hace falta.
     ports:
-      # Puertos de más y publicados en todas las interfaces.
-      - "3000:3000"
-      - "22:22"
-      - "9229:9229"
+      - "127.0.0.1:3000:3000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 256m
+    cpus: 0.5
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
