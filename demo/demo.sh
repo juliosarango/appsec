@@ -36,7 +36,10 @@ evaluar() {
   fi
   "$H/politica.sh" resumen "$herramienta" "$reporte" | tee -a "$OUT/resumen.md"
   n=$("$H/politica.sh" bloqueantes "$herramienta" "$reporte")
-  if [ "$n" -gt 0 ]; then
+  if [ "$herramienta" = zap ]; then
+    printf '\033[1;34mℹ zap: solo reporta, no bloquea (en CI corre solo si las 4 etapas estáticas pasan)\033[0m\n'
+    echo "**Resultado: ℹ solo reporta**" >> "$OUT/resumen.md"
+  elif [ "$n" -gt 0 ]; then
     printf '\033[1;31m✗ %s: %s hallazgo(s) rompen el build\033[0m\n' "$herramienta" "$n"
     echo "**Resultado: ✗ rompe el build ($n)**" >> "$OUT/resumen.md"
   else

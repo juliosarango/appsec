@@ -1,0 +1,434 @@
+
+[1;36m━━ 1/5 Secretos · Gitleaks (historial completo de git) ━━[0m
+Finding:     githubToken: "[1;3;mREDACTED[0m",
+Secret:      [1;3;mREDACTED[0m
+RuleID:      github-pat
+Entropy:     4.971928
+File:        app/src/config.js
+Line:        6
+Commit:      3bcb78f389d1b91685cfd7c70117015deeea1b2e
+Author:      Julio Sarango
+Email:       jsarangoq@gmail.com
+Date:        2026-10-06T01:46:48Z
+Fingerprint: 3bcb78f389d1b91685cfd7c70117015deeea1b2e:app/src/config.js:github-pat:6
+
+[90m1:51AM[0m [32mINF[0m [1m4 commits scanned.[0m
+[90m1:51AM[0m [32mINF[0m [1mscanned ~59108 bytes (59.11 KB) in 48.5ms[0m
+[90m1:51AM[0m [33mWRN[0m [1mleaks found: 1[0m
+### Gitleaks
+
+| Secretos |
+|---|
+| 1 |
+
+[1;31m✗ gitleaks: 1 hallazgo(s) rompen el build[0m
+
+[1;36m━━ 2/5 IaC · KICS (infra/) ━━[0m
+
+                                                                                                                                                   
+                                                                                                                                                                                                    
+   MLLLLLM             MLLLLLLLLL   LLLLLLL             KLLLLLLLLLLLLLLLL       LLLLLLLLLLLLLLLLLLLLLLL 
+   MMMMMMM           MMMMMMMMMML    MMMMMMMK       LMMMMMMMMMMMMMMMMMMMML   KLMMMMMMMMMMMMMMMMMMMMMMMMM 
+   MMMMMMM         MMMMMMMMML       MMMMMMMK     LMMMMMMMMMMMMMMMMMMMMMML  LMMMMMMMMMMMMMMMMMMMMMMMMMMM 
+   MMMMMMM      MMMMMMMMMML         MMMMMMMK   LMMMMMMMMMMMMMMMMMMMMMMMML LMMMMMMMMMMMMMMMMMMMMMMMMMMMM 
+   MMMMMMM    LMMMMMMMMML           MMMMMMMK  LMMMMMMMMMLLMLLLLLLLLLLLLLL LMMMMMMMLLLLLLLLLLLLLLLLLLLLM 
+   MMMMMMM  MMMMMMMMMLM             MMMMMMMK LMMMMMMMM                    LMMMMMML                      
+   MMMMMMMLMMMMMMMML                MMMMMMMK MMMMMMML                     LMMMMMMMMLLLLLLLLLLLLLMLL     
+   MMMMMMMMMMMMMMMM                 MMMMMMMK MMMMMML                       LMMMMMMMMMMMMMMMMMMMMMMMMML  
+   MMMMMMMMMMMMMMMMMM               MMMMMMMK MMMMMMM                         LMMMMMMMMMMMMMMMMMMMMMMMML 
+   MMMMMMM KLMMMMMMMMML             MMMMMMMK LMMMMMMM                                          MMMMMMMML
+   MMMMMMM    LMMMMMMMMMM           MMMMMMMK LMMMMMMMMLL                                        MMMMMMML
+   MMMMMMM      LMMMMMMMMMLL        MMMMMMMK  LMMMMMMMMMMMMMMMMMMMMMMMMML LLLLLLLLLLLLLLLLLLLLMMMMMMMMMM
+   MMMMMMM        MMMMMMMMMMML      MMMMMMMK   MMMMMMMMMMMMMMMMMMMMMMMMML LMMMMMMMMMMMMMMMMMMMMMMMMMMMM 
+   MMMMMMM          LLMMMMMMMMML    MMMMMMMK     LLMMMMMMMMMMMMMMMMMMMMML LMMMMMMMMMMMMMMMMMMMMMMMMMML  
+   MMMMMMM             MMMMMMMMMML  MMMMMMMK         KLMMMMMMMMMMMMMMMMML LMMMMMMMMMMMMMMMMMMMMMMMLK    
+                                                                                                            
+                                                                                                                                                                                                                                                                                                                        
+
+
+Scanning with Keeping Infrastructure as Code Secure v2.1.20
+
+
+
+
+
+Healthcheck Instruction Missing, Severity: LOW, Results: 1
+Description: Ensure that HEALTHCHECK is being used. The HEALTHCHECK instruction tells Docker how to test a container to check that it is still working
+Platform: Dockerfile
+CWE: 710
+Risk Score: 3.6
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockerfile-queries/b03a748a-542d-44f4-bb86-9199ab4fd2d5
+
+	[1]: ../../repo/infra/Dockerfile:5
+
+		004: # - Sin HEALTHCHECK.
+		005: FROM node:latest
+		006: 
+
+
+Exposing Port 22 (SSH), Severity: LOW, Results: 1
+Description: Expose only the ports that your application needs and avoid exposing ports like SSH (22)
+Platform: Dockerfile
+CWE: 710
+Risk Score: 2.9
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockerfile-queries/5907595b-5b6d-4142-b173-dbb0e73fbff8
+
+	[1]: ../../repo/infra/Dockerfile:11
+
+		010: 
+		011: EXPOSE 3000 22
+		012: CMD ["node", "src/server.js"]
+
+
+Security Opt Not Set, Severity: MEDIUM, Results: 1
+Description: Attribute 'security_opt' should be defined.
+Platform: DockerCompose
+CWE: 693
+Risk Score: 5.5
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/610e266e-6c12-4bca-9925-1ed0cd29742b
+
+	[1]: ../../repo/infra/docker-compose.yml:3
+
+		002: services:
+		003:   app:
+		004:     build:
+
+
+Privileged Ports Mapped In Container, Severity: MEDIUM, Results: 1
+Description: Privileged ports (1 to 1023) should not be mapped. Also you should drop net_bind_service linux capability from the container unless you absolutely need to use priviledged ports.
+Platform: DockerCompose
+CWE: 269
+Risk Score: 5.2
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/bc2908f3-f73c-40a9-8793-c1b7d5544f79
+
+	[1]: ../../repo/infra/docker-compose.yml:9
+
+		008:     privileged: true
+		009:     ports:
+		010:       # Puertos de más y publicados en todas las interfaces.
+
+
+Image Version Using 'latest', Severity: MEDIUM, Results: 1
+Description: When building images, always tag them with useful tags which codify version information, intended destination (prod or test, for instance), stability, or other information that is useful when deploying the application in different environments. Do not rely on the automatically-created latest tag
+Platform: Dockerfile
+CWE: 1357
+Risk Score: 5.1
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockerfile-queries/f45ea400-6bbe-4501-9fc7-1c3d75c32067
+
+	[1]: ../../repo/infra/Dockerfile:5
+
+		004: # - Sin HEALTHCHECK.
+		005: FROM node:latest
+		006: 
+
+
+Healthcheck Not Set, Severity: MEDIUM, Results: 1
+Description: Check containers periodically to see if they are running properly.
+Platform: DockerCompose
+CWE: 703
+Risk Score: 5.1
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/698ed579-b239-4f8f-a388-baa4bcb13ef8
+
+	[1]: ../../repo/infra/docker-compose.yml:3
+
+		002: services:
+		003:   app:
+		004:     build:
+
+
+Container Traffic Not Bound To Host Interface, Severity: MEDIUM, Results: 1
+Description: Incoming container traffic should be bound to a specific host interface
+Platform: DockerCompose
+CWE: 693
+Risk Score: 5.2
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/451d79dc-0588-476a-ad03-3c7f0320abb3
+
+	[1]: ../../repo/infra/docker-compose.yml:9
+
+		008:     privileged: true
+		009:     ports:
+		010:       # Puertos de más y publicados en todas las interfaces.
+
+
+Container Capabilities Unrestricted, Severity: MEDIUM, Results: 1
+Description: Some capabilities are not needed in certain (or any) containers. Make sure that you only add capabilities that your container needs. Drop unnecessary capabilities as well.
+Platform: DockerCompose
+CWE: 400
+Risk Score: 6.8
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/ce76b7d0-9e77-464d-b86f-c5c48e03e22d
+
+	[1]: ../../repo/infra/docker-compose.yml:3
+
+		002: services:
+		003:   app:
+		004:     build:
+
+
+Privileged Containers Enabled, Severity: HIGH, Results: 1
+Description: Privileged containers should be used with extreme caution, they have all of the capabilities that the linux kernel offers for docker.
+Platform: DockerCompose
+CWE: 250
+Risk Score: 7.7
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockercompose-queries/ae5b6871-7f45-42e0-bb4c-ab300c4d2026
+
+	[1]: ../../repo/infra/docker-compose.yml:8
+
+		007:     # privileged desactiva casi todo el aislamiento del contenedor.
+		008:     privileged: true
+		009:     ports:
+
+
+Missing User Instruction, Severity: HIGH, Results: 1
+Description: Always set a user in the runtime stage of your Dockerfile. Without it, the container defaults to root, even if earlier build stages define a user.
+Platform: Dockerfile
+CWE: 250
+Risk Score: 7.7
+Learn more about this vulnerability: https://docs.kics.io/latest/queries/dockerfile-queries/fd54f200-402c-4333-a5a4-36ef6709af2f
+
+	[1]: ../../repo/infra/Dockerfile:5
+
+		004: # - Sin HEALTHCHECK.
+		005: FROM node:latest
+		006: 
+
+
+
+Results Summary:
+CRITICAL: 0
+HIGH: 2
+MEDIUM: 6
+LOW: 2
+INFO: 0
+TOTAL: 10
+
+### KICS
+
+| Crítica | Alta | Media | Baja | Info |
+|---|---|---|---|---|
+| 0 | 2 | 6 | 2 | 0 |
+
+[1;31m✗ kics: 2 hallazgo(s) rompen el build[0m
+
+[1;36m━━ 3/5 Dependencias · OSV-Scanner (app/package-lock.json) ━━[0m
+Scanning dir app
+Starting filesystem walk for root: /
+Scanned /repo/app/package-lock.json file and found 67 packages
+End status: 3 dirs visited, 8 inodes visited, 1 Extract calls, 1.589367ms elapsed, 1.589497ms wall time
+
+Total 1 package affected by 3 known vulnerabilities (0 Critical, 1 High, 2 Medium, 0 Low, 0 Unknown) from 1 ecosystem.
+3 vulnerabilities can be fixed.
+
++-------------------------------------+------+-----------+---------+---------+---------------+-----------------------+
+| OSV URL                             | CVSS | ECOSYSTEM | PACKAGE | VERSION | FIXED VERSION | SOURCE                |
++-------------------------------------+------+-----------+---------+---------+---------------+-----------------------+
+| https://osv.dev/GHSA-29mw-wpgm-hmr9 | 5.3  | npm       | lodash  | 4.17.20 | 4.17.21       | app/package-lock.json |
+| https://osv.dev/GHSA-35jh-r3h4-6jhm | 8.1  | npm       | lodash  | 4.17.20 | 4.17.21       | app/package-lock.json |
+| https://osv.dev/GHSA-r5fr-rjxr-66jc |      |           |         |         |               |                       |
+| https://osv.dev/GHSA-f23m-r3pf-42rh | 6.9  | npm       | lodash  | 4.17.20 | 4.18.0        | app/package-lock.json |
+| https://osv.dev/GHSA-xxjr-mmjv-4gpg |      |           |         |         |               |                       |
++-------------------------------------+------+-----------+---------+---------+---------------+-----------------------+
+### OSV-Scanner
+
+| Crítica | Alta | Media | Baja | Sin CVSS |
+|---|---|---|---|---|
+| 0 | 1 | 2 | 0 | 0 |
+
+[1;31m✗ osv: 1 hallazgo(s) rompen el build[0m
+
+[1;36m━━ 4/5 Código · Semgrep CE (app/src) ━━[0m
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 3 files tracked by git with 190 Code rules:
+  Scanning 3 files with 184 js rules.
+                   
+                   
+┌─────────────────┐
+│ 6 Code Findings │
+└─────────────────┘
+                     
+    app/src/server.js
+   ❯❯❱ javascript.express.security.injection.tainted-sql-string.tainted-sql-string
+          ❰❰ Blocking ❱❱
+          Detected user input used to manually construct a SQL string. This is usually bad practice because 
+          manual construction could accidentally result in a SQL injection. An attacker could use a SQL     
+          injection to steal or modify contents of the database. Instead, use a parameterized query which is
+          available by default in most database engines. Alternatively, consider using an object-relational 
+          mapper (ORM) such as Sequelize which will protect your queries.                                   
+          Details: https://sg.run/66ZL                                                                      
+                                                                                                            
+           13┆ const rows = db.prepare("SELECT id, name, email FROM users WHERE id = " +
+               req.query.id).all();                                                     
+   
+   ❯❯❱ ajinabraham.njsscan.exec.exec_os_command.generic_os_command_exec
+          ❰❰ Blocking ❱❱
+          User controlled data in 'child_process.exec()' can result in Remote OS Command Execution.
+          Details: https://sg.run/gP2Z                                                             
+                                                                                                   
+           20┆ exec(`ping -c 1 ${req.query.host}`, (err, stdout) => {
+           21┆   if (err) return res.status(500).send("error");
+           22┆   res.type("text").send(stdout);
+           23┆ });
+   
+   ❯❯❱ ajinabraham.njsscan.eval.eval_node.eval_nodejs
+          ❰❰ Blocking ❱❱
+          User controlled data in eval() or similar functions may result in Server Side Injection or Remote
+          Code Injection                                                                                   
+          Details: https://sg.run/xpQg                                                                     
+                                                                                                           
+           29┆ const result = eval(req.body.expr);
+   
+   ❯❯❱ javascript.lang.security.audit.code-string-concat.code-string-concat
+          ❰❰ Blocking ❱❱
+          Found data from an Express or Next web request flowing to `eval`. If this data is user-controllable
+          this can lead to execution of arbitrary system commands in the context of your application process.
+          Avoid `eval` whenever possible.                                                                    
+          Details: https://sg.run/96Yk                                                                       
+                                                                                                             
+           29┆ const result = eval(req.body.expr);
+   
+   ❯❯❱ ajinabraham.njsscan.xss.xss_node.express_xss
+          ❰❰ Blocking ❱❱
+          Untrusted User Input in Response will result in Reflected Cross Site Scripting Vulnerability.
+          Details: https://sg.run/WxE4                                                                 
+                                                                                                       
+           36┆ res.send(tpl({ name: req.query.name || "V-SandBox" }));
+   
+    ❯❱ javascript.express.security.audit.xss.direct-response-write.direct-response-write
+          ❰❰ Blocking ❱❱
+          Detected directly writing to a Response object from user-defined input. This bypasses any HTML      
+          escaping and may expose your application to a Cross-Site-scripting (XSS) vulnerability. Instead, use
+          'resp.render()' to render safely escaped HTML.                                                      
+          Details: https://sg.run/vzGl                                                                        
+                                                                                                              
+           36┆ res.send(tpl({ name: req.query.name || "V-SandBox" }));
+
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 6 (6 blocking)
+ • Rules run: 184
+ • Targets scanned: 3
+ • Parsed lines: ~100.0%
+ • Scan was limited to files tracked by git
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 184 rules on 3 files: 6 findings.
+### Semgrep
+
+| Alta (ERROR) | Media (WARNING) | Baja (INFO) |
+|---|---|---|
+| 5 | 1 | 0 |
+
+[1;31m✗ semgrep: 5 hallazgo(s) rompen el build[0m
+
+[1;36m━━ 5/5 DAST · ZAP baseline contra OWASP Juice Shop ━━[0m
+Esperando a Juice Shop en http://localhost:3000 ...
+Total of 88 URLs
+PASS: Vulnerable JS Library (Powered by Retire.js) [10003]
+PASS: In Page Banner Information Leak [10009]
+PASS: Cookie No HttpOnly Flag [10010]
+PASS: Cookie Without Secure Flag [10011]
+PASS: Re-examine Cache-control Directives [10015]
+PASS: Cross-Domain JavaScript Source File Inclusion [10017]
+PASS: Content-Type Header Missing [10019]
+PASS: Anti-clickjacking Header [10020]
+PASS: X-Content-Type-Options Header Missing [10021]
+PASS: Information Disclosure - Debug Error Messages [10023]
+PASS: Information Disclosure - Sensitive Information in URL [10024]
+PASS: Information Disclosure - Sensitive Information in HTTP Referrer Header [10025]
+PASS: HTTP Parameter Override [10026]
+PASS: Information Disclosure - Suspicious Comments [10027]
+PASS: Off-site Redirect [10028]
+PASS: Cookie Poisoning [10029]
+PASS: User Controllable Charset [10030]
+PASS: User Controllable HTML Element Attribute (Potential XSS) [10031]
+PASS: Viewstate [10032]
+PASS: Directory Browsing [10033]
+PASS: Heartbleed OpenSSL Vulnerability (Indicative) [10034]
+PASS: Strict-Transport-Security Header [10035]
+PASS: HTTP Server Response Header [10036]
+PASS: Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s) [10037]
+PASS: X-Backend-Server Header Information Leak [10039]
+PASS: Secure Pages Include Mixed Content [10040]
+PASS: HTTP to HTTPS Insecure Transition in Form Post [10041]
+PASS: HTTPS to HTTP Insecure Transition in Form Post [10042]
+PASS: User Controllable JavaScript Event (XSS) [10043]
+PASS: Big Redirect Detected (Potential Sensitive Information Leak) [10044]
+PASS: Content Cacheability [10049]
+PASS: Retrieved from Cache [10050]
+PASS: X-ChromeLogger-Data (XCOLD) Header Information Leak [10052]
+PASS: Cookie without SameSite Attribute [10054]
+PASS: CSP [10055]
+PASS: X-Debug-Token Information Leak [10056]
+PASS: Username Hash Found [10057]
+PASS: X-AspNet-Version Response Header [10061]
+PASS: PII Disclosure [10062]
+PASS: Hash Disclosure [10097]
+PASS: Source Code Disclosure [10099]
+PASS: Weak Authentication Method [10105]
+PASS: Reverse Tabnabbing [10108]
+PASS: Modern Web Application [10109]
+PASS: Authentication Request Identified [10111]
+PASS: Session Management Response Identified [10112]
+PASS: Verification Request Identified [10113]
+PASS: Script Served From Malicious Domain (polyfill) [10115]
+PASS: ZAP is Out of Date [10116]
+PASS: Absence of Anti-CSRF Tokens [10202]
+PASS: Private IP Disclosure [2]
+PASS: Session ID in URL Rewrite [3]
+PASS: Script Passive Scan Rules [50001]
+PASS: Insecure JSF ViewState [90001]
+PASS: Java Serialization Object [90002]
+PASS: Sub Resource Integrity Attribute Missing [90003]
+PASS: Charset Mismatch [90011]
+PASS: Application Error Disclosure [90022]
+PASS: WSDL File Detection [90030]
+PASS: Loosely Scoped Cookie [90033]
+WARN-NEW: Content Security Policy (CSP) Header Not Set [10038] x 11 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000 (200 OK)
+	http://localhost:3000/ftp/encrypt.pyc (403 Forbidden)
+	http://localhost:3000/ftp/suspicious_errors.yml (403 Forbidden)
+WARN-NEW: Deprecated Feature Policy Header Set [10063] x 12 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000 (200 OK)
+	http://localhost:3000/polyfills.js (200 OK)
+	http://localhost:3000/scripts.js (200 OK)
+WARN-NEW: Timestamp Disclosure - Unix [10096] x 18 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000 (200 OK)
+WARN-NEW: Cross-Domain Misconfiguration [10098] x 12 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/assets/public/favicon_js.ico (200 OK)
+	http://localhost:3000/robots.txt (200 OK)
+	http://localhost:3000/styles.css (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+WARN-NEW: Dangerous JS Functions [10110] x 1 
+	http://localhost:3000/main.js (200 OK)
+WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 12 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000 (200 OK)
+FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 6	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
+### ZAP baseline (no bloquea)
+
+| Alta | Media | Baja | Info | Ignoradas (rules.tsv) |
+|---|---|---|---|---|
+| 0 | 2 | 5 | 4 | 0 |
+
+[1;32m✓ zap: pasa la política[0m
+Reporte HTML: reportes/main/zap/zap.html
+
+[1;36m━━ Resumen guardado en reportes/main/resumen.md ━━[0m

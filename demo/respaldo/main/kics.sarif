@@ -1,0 +1,953 @@
+{
+	"$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+	"version": "2.1.0",
+	"runs": [
+		{
+			"tool": {
+				"driver": {
+					"name": "KICS",
+					"version": "v2.1.20",
+					"fullName": "Keeping Infrastructure as Code Secure",
+					"informationUri": "https://www.kics.io/",
+					"rules": [
+						{
+							"id": "fd54f200-402c-4333-a5a4-36ef6709af2f",
+							"name": "Missing User Instruction",
+							"shortDescription": {
+								"text": "Missing User Instruction"
+							},
+							"fullDescription": {
+								"text": "Always set a user in the runtime stage of your Dockerfile. Without it, the container defaults to root, even if earlier build stages define a user."
+							},
+							"defaultConfiguration": {
+								"level": "error"
+							},
+							"helpUri": "https://docs.docker.com/engine/reference/builder/#user",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT005",
+										"index": 2,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "250",
+										"guid": "b829983e-2ede-4c80-98a9-98ef84787c4a",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "7.7"
+							}
+						},
+						{
+							"id": "ae5b6871-7f45-42e0-bb4c-ab300c4d2026",
+							"name": "Privileged Containers Enabled",
+							"shortDescription": {
+								"text": "Privileged Containers Enabled"
+							},
+							"fullDescription": {
+								"text": "Privileged containers should be used with extreme caution, they have all of the capabilities that the linux kernel offers for docker."
+							},
+							"defaultConfiguration": {
+								"level": "error"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/#privileged",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT011",
+										"index": 13,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "250",
+										"guid": "e49330b4-d2b1-482f-a7cc-d7c47bc67312",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "7.7"
+							}
+						},
+						{
+							"id": "ce76b7d0-9e77-464d-b86f-c5c48e03e22d",
+							"name": "Container Capabilities Unrestricted",
+							"shortDescription": {
+								"text": "Container Capabilities Unrestricted"
+							},
+							"fullDescription": {
+								"text": "Some capabilities are not needed in certain (or any) containers. Make sure that you only add capabilities that your container needs. Drop unnecessary capabilities as well."
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/compose-file-v3/#cap_add-cap_drop",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT011",
+										"index": 13,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "400",
+										"guid": "427fbc35-85b6-4995-a8ed-b7176d0d8764",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "6.8"
+							}
+						},
+						{
+							"id": "451d79dc-0588-476a-ad03-3c7f0320abb3",
+							"name": "Container Traffic Not Bound To Host Interface",
+							"shortDescription": {
+								"text": "Container Traffic Not Bound To Host Interface"
+							},
+							"fullDescription": {
+								"text": "Incoming container traffic should be bound to a specific host interface"
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/compose-file-v3/#ports",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT009",
+										"index": 12,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "693",
+										"guid": "db10cdaf-06f1-48a2-8aca-e22f584c5ac7",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "5.2"
+							}
+						},
+						{
+							"id": "698ed579-b239-4f8f-a388-baa4bcb13ef8",
+							"name": "Healthcheck Not Set",
+							"shortDescription": {
+								"text": "Healthcheck Not Set"
+							},
+							"fullDescription": {
+								"text": "Check containers periodically to see if they are running properly."
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT002",
+										"index": 14,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "703",
+										"guid": "125f187b-11db-4d5a-9b54-ba3af0b42fe2",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "5.1"
+							}
+						},
+						{
+							"id": "f45ea400-6bbe-4501-9fc7-1c3d75c32067",
+							"name": "Image Version Using 'latest'",
+							"shortDescription": {
+								"text": "Image Version Using 'latest'"
+							},
+							"fullDescription": {
+								"text": "When building images, always tag them with useful tags which codify version information, intended destination (prod or test, for instance), stability, or other information that is useful when deploying the application in different environments. Do not rely on the automatically-created latest tag"
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/develop/dev-best-practices/",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT004",
+										"index": 8,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "1357",
+										"guid": "7c58f642-23bb-43f0-a6e0-30c0f67a3628",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "5.1"
+							}
+						},
+						{
+							"id": "bc2908f3-f73c-40a9-8793-c1b7d5544f79",
+							"name": "Privileged Ports Mapped In Container",
+							"shortDescription": {
+								"text": "Privileged Ports Mapped In Container"
+							},
+							"fullDescription": {
+								"text": "Privileged ports (1 to 1023) should not be mapped. Also you should drop net_bind_service linux capability from the container unless you absolutely need to use priviledged ports."
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/compose-file-v3/#cap_add-cap_drop",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT009",
+										"index": 12,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "269",
+										"guid": "aa79c8c8-d8a6-4184-868e-06a7c93e3dd1",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "5.2"
+							}
+						},
+						{
+							"id": "610e266e-6c12-4bca-9925-1ed0cd29742b",
+							"name": "Security Opt Not Set",
+							"shortDescription": {
+								"text": "Security Opt Not Set"
+							},
+							"fullDescription": {
+								"text": "Attribute 'security_opt' should be defined."
+							},
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"helpUri": "https://docs.docker.com/compose/compose-file/compose-file-v3/#security_opt",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT011",
+										"index": 13,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "693",
+										"guid": "6ce02888-768f-4342-ae4a-834e8db3b407",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "5.5"
+							}
+						},
+						{
+							"id": "5907595b-5b6d-4142-b173-dbb0e73fbff8",
+							"name": "Exposing Port 22 (SSH)",
+							"shortDescription": {
+								"text": "Exposing Port 22 (SSH)"
+							},
+							"fullDescription": {
+								"text": "Expose only the ports that your application needs and avoid exposing ports like SSH (22)"
+							},
+							"defaultConfiguration": {
+								"level": "note"
+							},
+							"helpUri": "https://sysdig.com/blog/dockerfile-best-practices/",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT004",
+										"index": 8,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "710",
+										"guid": "6080abfc-88a5-4978-9e0e-5c9164ec2074",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "2.9"
+							}
+						},
+						{
+							"id": "b03a748a-542d-44f4-bb86-9199ab4fd2d5",
+							"name": "Healthcheck Instruction Missing",
+							"shortDescription": {
+								"text": "Healthcheck Instruction Missing"
+							},
+							"fullDescription": {
+								"text": "Ensure that HEALTHCHECK is being used. The HEALTHCHECK instruction tells Docker how to test a container to check that it is still working"
+							},
+							"defaultConfiguration": {
+								"level": "note"
+							},
+							"helpUri": "https://docs.docker.com/engine/reference/builder/#healthcheck",
+							"relationships": [
+								{
+									"target": {
+										"id": "CAT007",
+										"index": 3,
+										"toolComponent": {
+											"name": "Categories",
+											"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f"
+										}
+									}
+								},
+								{
+									"target": {
+										"id": "710",
+										"guid": "713d0ef7-627c-4789-b161-b67188bb82c2",
+										"toolComponent": {
+											"name": "CWE",
+											"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3"
+										}
+									}
+								}
+							],
+							"properties": {
+								"riskScore": "3.6"
+							}
+						}
+					]
+				}
+			},
+			"results": [
+				{
+					"ruleId": "fd54f200-402c-4333-a5a4-36ef6709af2f",
+					"ruleIndex": 0,
+					"kind": "fail",
+					"message": {
+						"text": "The 'Dockerfile' does not contain any 'USER' instruction",
+						"properties": {
+							"platform": "Dockerfile",
+							"riskScore": "7.7"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/Dockerfile"
+								},
+								"region": {
+									"startLine": 5
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "ae5b6871-7f45-42e0-bb4c-ab300c4d2026",
+					"ruleIndex": 1,
+					"kind": "fail",
+					"message": {
+						"text": "Docker compose file has 'privileged' attribute as true",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "7.7"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 8
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "ce76b7d0-9e77-464d-b86f-c5c48e03e22d",
+					"ruleIndex": 2,
+					"kind": "fail",
+					"message": {
+						"text": "Docker compose file doesn't have 'cap_drop' attribute. Make sure your container only has necessary capabilities.",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "6.8"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 3
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "451d79dc-0588-476a-ad03-3c7f0320abb3",
+					"ruleIndex": 3,
+					"kind": "fail",
+					"message": {
+						"text": "Docker compose file doesn't have 'ports' attribute bound to a specific host interface",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "5.2"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 9
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "698ed579-b239-4f8f-a388-baa4bcb13ef8",
+					"ruleIndex": 4,
+					"kind": "fail",
+					"message": {
+						"text": "Healthcheck is not defined.",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "5.1"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 3
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "f45ea400-6bbe-4501-9fc7-1c3d75c32067",
+					"ruleIndex": 5,
+					"kind": "fail",
+					"message": {
+						"text": "FROM node:latest'",
+						"properties": {
+							"platform": "Dockerfile",
+							"riskScore": "5.1"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/Dockerfile"
+								},
+								"region": {
+									"startLine": 5
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "bc2908f3-f73c-40a9-8793-c1b7d5544f79",
+					"ruleIndex": 6,
+					"kind": "fail",
+					"message": {
+						"text": "Docker compose file has 'ports' attribute set to privileged ports (\u003c1024).",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "5.2"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 9
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "610e266e-6c12-4bca-9925-1ed0cd29742b",
+					"ruleIndex": 7,
+					"kind": "fail",
+					"message": {
+						"text": "Docker compose file does not have 'security_opt' attribute",
+						"properties": {
+							"platform": "DockerCompose",
+							"riskScore": "5.5"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/docker-compose.yml"
+								},
+								"region": {
+									"startLine": 3
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "5907595b-5b6d-4142-b173-dbb0e73fbff8",
+					"ruleIndex": 8,
+					"kind": "fail",
+					"message": {
+						"text": "'EXPOSE' contains the port 22 ",
+						"properties": {
+							"platform": "Dockerfile",
+							"riskScore": "2.9"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/Dockerfile"
+								},
+								"region": {
+									"startLine": 11
+								}
+							}
+						}
+					]
+				},
+				{
+					"ruleId": "b03a748a-542d-44f4-bb86-9199ab4fd2d5",
+					"ruleIndex": 9,
+					"kind": "fail",
+					"message": {
+						"text": "Dockerfile doesn't contain instruction 'HEALTHCHECK'",
+						"properties": {
+							"platform": "Dockerfile",
+							"riskScore": "3.6"
+						}
+					},
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "../../repo/infra/Dockerfile"
+								},
+								"region": {
+									"startLine": 5
+								}
+							}
+						}
+					]
+				}
+			],
+			"taxonomies": [
+				{
+					"guid": "58cdcc6f-fe41-4724-bfb3-131a93df4c3f",
+					"name": "Categories",
+					"fullDescription": {
+						"text": "This taxonomy contains the types an issue can assume"
+					},
+					"shortDescription": {
+						"text": "Vulnerabilities categories"
+					},
+					"taxa": [
+						{
+							"name": "Undefined Category",
+							"id": "CAT000",
+							"shortDescription": {
+								"text": "Category is not defined"
+							},
+							"fullDescription": {
+								"text": "Category is not defined"
+							}
+						},
+						{
+							"name": "Access Control",
+							"id": "CAT001",
+							"shortDescription": {
+								"text": "Service permission and identity management"
+							},
+							"fullDescription": {
+								"text": "Service permission and identity management"
+							}
+						},
+						{
+							"name": "Build Process",
+							"id": "CAT005",
+							"shortDescription": {
+								"text": "Insecure configurations when building/deploying"
+							},
+							"fullDescription": {
+								"text": "Insecure configurations when building/deploying"
+							}
+						},
+						{
+							"name": "Insecure Configurations",
+							"id": "CAT007",
+							"shortDescription": {
+								"text": "Configurations which expose the application unnecessarily"
+							},
+							"fullDescription": {
+								"text": "Configurations which expose the application unnecessarily"
+							}
+						},
+						{
+							"name": "Observability",
+							"id": "CAT010",
+							"shortDescription": {
+								"text": "Logging and Monitoring"
+							},
+							"fullDescription": {
+								"text": "Logging and Monitoring"
+							}
+						},
+						{
+							"name": "Secret Management",
+							"id": "CAT012",
+							"shortDescription": {
+								"text": "Secret and Key management"
+							},
+							"fullDescription": {
+								"text": "Secret and Key management"
+							}
+						},
+						{
+							"name": "Structure and Semantics",
+							"id": "CAT014",
+							"shortDescription": {
+								"text": "Malformed document structure or inadequate semantics"
+							},
+							"fullDescription": {
+								"text": "Malformed document structure or inadequate semantics"
+							}
+						},
+						{
+							"name": "Bill Of Materials",
+							"id": "CAT015",
+							"shortDescription": {
+								"text": "List of resources provisioned"
+							},
+							"fullDescription": {
+								"text": "List of resources provisioned"
+							}
+						},
+						{
+							"name": "Best Practices",
+							"id": "CAT004",
+							"shortDescription": {
+								"text": "Metadata management"
+							},
+							"fullDescription": {
+								"text": "Metadata management"
+							}
+						},
+						{
+							"name": "Supply-Chain",
+							"id": "CAT013",
+							"shortDescription": {
+								"text": "Dependency version management"
+							},
+							"fullDescription": {
+								"text": "Dependency version management"
+							}
+						},
+						{
+							"name": "Backup",
+							"id": "CAT003",
+							"shortDescription": {
+								"text": "Survivability and Recovery"
+							},
+							"fullDescription": {
+								"text": "Survivability and Recovery"
+							}
+						},
+						{
+							"name": "Encryption",
+							"id": "CAT006",
+							"shortDescription": {
+								"text": "Data Security and Encryption configuration"
+							},
+							"fullDescription": {
+								"text": "Data Security and Encryption configuration"
+							}
+						},
+						{
+							"name": "Networking and Firewall",
+							"id": "CAT009",
+							"shortDescription": {
+								"text": "Network port exposure and firewall configuration"
+							},
+							"fullDescription": {
+								"text": "Network port exposure and firewall configuration"
+							}
+						},
+						{
+							"name": "Resource Management",
+							"id": "CAT011",
+							"shortDescription": {
+								"text": "Resource and privilege limit configuration"
+							},
+							"fullDescription": {
+								"text": "Resource and privilege limit configuration"
+							}
+						},
+						{
+							"name": "Availability",
+							"id": "CAT002",
+							"shortDescription": {
+								"text": "Reliability and Scalability"
+							},
+							"fullDescription": {
+								"text": "Reliability and Scalability"
+							}
+						},
+						{
+							"name": "Insecure Defaults",
+							"id": "CAT008",
+							"shortDescription": {
+								"text": "Configurations that are insecure by default"
+							},
+							"fullDescription": {
+								"text": "Configurations that are insecure by default"
+							}
+						}
+					]
+				},
+				{
+					"guid": "1489b0c4-d7ce-4d31-af66-6382a01202e3",
+					"name": "CWE",
+					"fullDescription": {
+						"text": "The MITRE Common Weakness Enumeration"
+					},
+					"shortDescription": {
+						"text": "The MITRE Common Weakness Enumeration"
+					},
+					"downloadUri": "https://cwe.mitre.org/data/xml/cwec_v4.13.xml.zip",
+					"informationUri": "https://cwe.mitre.org/data/published/cwe_v4.13.pdf",
+					"isComprehensive": true,
+					"language": "en",
+					"minimumRequiredLocalizedDataSemanticVersion": "4.13",
+					"organization": "MITRE",
+					"releaseDateUtc": "2023-10-26",
+					"taxa": [
+						{
+							"guid": "e49330b4-d2b1-482f-a7cc-d7c47bc67312",
+							"id": "250",
+							"shortDescription": {
+								"text": "The product performs an operation at a privilege level that is higher than the minimum level required, which creates new weaknesses or amplifies the consequences of other weaknesses."
+							},
+							"fullDescription": {
+								"text": "New weaknesses can be exposed because running with extra privileges, such as root or Administrator, can disable the normal security checks being performed by the operating system or surrounding environment. Other pre-existing weaknesses can turn into security vulnerabilities if they occur while operating at raised privileges. Privilege management functions can behave in some less-than-obvious ways, and they have different quirks on different platforms. These inconsistencies are particularly pronounced if you are transitioning from one non-root user to another. Signal handlers and spawned processes run at the privilege of the owning process, so if a process is running as root when a signal fires or a sub-process is executed, the signal handler or sub-process will operate with root privileges."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/250.html"
+						},
+						{
+							"guid": "e49330b4-d2b1-482f-a7cc-d7c47bc67312",
+							"id": "250",
+							"shortDescription": {
+								"text": "The product performs an operation at a privilege level that is higher than the minimum level required, which creates new weaknesses or amplifies the consequences of other weaknesses."
+							},
+							"fullDescription": {
+								"text": "New weaknesses can be exposed because running with extra privileges, such as root or Administrator, can disable the normal security checks being performed by the operating system or surrounding environment. Other pre-existing weaknesses can turn into security vulnerabilities if they occur while operating at raised privileges. Privilege management functions can behave in some less-than-obvious ways, and they have different quirks on different platforms. These inconsistencies are particularly pronounced if you are transitioning from one non-root user to another. Signal handlers and spawned processes run at the privilege of the owning process, so if a process is running as root when a signal fires or a sub-process is executed, the signal handler or sub-process will operate with root privileges."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/250.html"
+						},
+						{
+							"guid": "427fbc35-85b6-4995-a8ed-b7176d0d8764",
+							"id": "400",
+							"shortDescription": {
+								"text": "The product does not properly control the allocation and maintenance of a limited resource, thereby enabling an actor to influence the amount of resources consumed, eventually leading to the exhaustion of available resources."
+							},
+							"fullDescription": {
+								"text": "Limited resources include memory, file system storage, database connection pool entries, and CPU. If an attacker can trigger the allocation of these limited resources, but the number or size of the resources is not controlled, then the attacker could cause a denial of service that consumes all available resources. This would prevent valid users from accessing the product, and it could potentially have an impact on the surrounding environment. For example, a memory exhaustion attack against an application could slow down the application as well as its host operating system. There are at least three distinct scenarios which can commonly lead to resource exhaustion: Lack of throttling for the number of allocated resources Losing all references to a resource before reaching the shutdown stage Not closing/returning a resource after processing Resource exhaustion problems are often result due to an incorrect implementation of the following situations: Error conditions and other exceptional circumstances. Confusion over which part of the program is responsible for releasing the resource."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/400.html"
+						},
+						{
+							"guid": "6ce02888-768f-4342-ae4a-834e8db3b407",
+							"id": "693",
+							"shortDescription": {
+								"text": "The product does not use or incorrectly uses a protection mechanism that provides sufficient defense against directed attacks against the product."
+							},
+							"fullDescription": {
+								"text": "This weakness covers three distinct situations. A missing protection mechanism occurs when the application does not define any mechanism against a certain class of attack. An insufficient protection mechanism might provide some defenses - for example, against the most common attacks - but it does not protect against everything that is intended. Finally, an ignored mechanism occurs when a mechanism is available and in active use within the product, but the developer has not applied it in some code path."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/693.html"
+						},
+						{
+							"guid": "125f187b-11db-4d5a-9b54-ba3af0b42fe2",
+							"id": "703",
+							"shortDescription": {
+								"text": "The product does not properly anticipate or handle exceptional conditions that rarely occur during normal operation of the product."
+							},
+							"fullDescription": {
+								"text": "The product does not properly anticipate or handle exceptional conditions that rarely occur during normal operation of the product."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/703.html"
+						},
+						{
+							"guid": "7c58f642-23bb-43f0-a6e0-30c0f67a3628",
+							"id": "1357",
+							"shortDescription": {
+								"text": "The product is built from multiple separate components, but it uses a component that is not sufficiently trusted to meet expectations for security, reliability, updateability, and maintainability."
+							},
+							"fullDescription": {
+								"text": "Many modern hardware and software products are built by combining multiple smaller components together into one larger entity, often during the design or architecture phase. For example, a hardware component might be built by a separate supplier, or the product might use an open-source software library from a third party. Regardless of the source, each component should be sufficiently trusted to ensure correct, secure operation of the product. If a component is not trustworthy, it can produce significant risks for the overall product, such as vulnerabilities that cannot be patched fast enough (if at all); hidden functionality such as malware; inability to update or replace the component if needed for security purposes; hardware components built from parts that do not meet specifications in ways that can lead to weaknesses; etc. Note that a component might not be trustworthy even if it is owned by the product vendor, such as a software component whose source code is lost and was built by developers who left the company, or a component that was developed by a separate company that was acquired and brought into the product's own company. Note that there can be disagreement as to whether a component is sufficiently trustworthy, since trust is ultimately subjective. Different stakeholders (e.g., customers, vendors, governments) have various threat models and ways to assess trust, and design/architecture choices might make tradeoffs between security, reliability, safety, privacy, cost, and other characteristics."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/1357.html"
+						},
+						{
+							"guid": "aa79c8c8-d8a6-4184-868e-06a7c93e3dd1",
+							"id": "269",
+							"shortDescription": {
+								"text": "The product does not properly assign, modify, track, or check privileges for an actor, creating an unintended sphere of control for that actor."
+							},
+							"fullDescription": {
+								"text": "The product does not properly assign, modify, track, or check privileges for an actor, creating an unintended sphere of control for that actor."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/269.html"
+						},
+						{
+							"guid": "6ce02888-768f-4342-ae4a-834e8db3b407",
+							"id": "693",
+							"shortDescription": {
+								"text": "The product does not use or incorrectly uses a protection mechanism that provides sufficient defense against directed attacks against the product."
+							},
+							"fullDescription": {
+								"text": "This weakness covers three distinct situations. A missing protection mechanism occurs when the application does not define any mechanism against a certain class of attack. An insufficient protection mechanism might provide some defenses - for example, against the most common attacks - but it does not protect against everything that is intended. Finally, an ignored mechanism occurs when a mechanism is available and in active use within the product, but the developer has not applied it in some code path."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/693.html"
+						},
+						{
+							"guid": "713d0ef7-627c-4789-b161-b67188bb82c2",
+							"id": "710",
+							"shortDescription": {
+								"text": "The product does not follow certain coding rules for development, which can lead to resultant weaknesses or increase the severity of the associated vulnerabilities."
+							},
+							"fullDescription": {
+								"text": "The product does not follow certain coding rules for development, which can lead to resultant weaknesses or increase the severity of the associated vulnerabilities."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/710.html"
+						},
+						{
+							"guid": "713d0ef7-627c-4789-b161-b67188bb82c2",
+							"id": "710",
+							"shortDescription": {
+								"text": "The product does not follow certain coding rules for development, which can lead to resultant weaknesses or increase the severity of the associated vulnerabilities."
+							},
+							"fullDescription": {
+								"text": "The product does not follow certain coding rules for development, which can lead to resultant weaknesses or increase the severity of the associated vulnerabilities."
+							},
+							"helpUri": "https://cwe.mitre.org/data/definitions/710.html"
+						}
+					]
+				}
+			]
+		}
+	]
+}
