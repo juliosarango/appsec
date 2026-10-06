@@ -90,7 +90,7 @@ Por eso en [`docs/workflow-inseguro.yml`](docs/workflow-inseguro.yml) (no se eje
 2. Cada imagen se referencia por digest, en [`.github/herramientas/Dockerfile`](.github/herramientas/Dockerfile).
 3. `permissions: contents: read` a nivel de workflow; solo los jobs que suben SARIF tienen `security-events: write`.
 4. `persist-credentials: false` en `actions/checkout`.
-5. [Dependabot](.github/dependabot.yml) propone los PR para actualizar los SHA y digests. Las imágenes de las herramientas están en un Dockerfile justamente para que Dependabot las encuentre: dentro de un `docker run` no las ve.
+5. Las imágenes de las herramientas están en un Dockerfile y no dentro de un `docker run`, para que un bot de actualización pueda encontrarlas (ver [Consejos finales](#consejos-finales)).
 
 Fijar por SHA tiene límites. `google/osv-scanner-action` usa por dentro `ghcr.io/google/osv-scanner-action:v2.6.0` **por tag**, así que fijar la acción no fija esa imagen. Revisa también lo que ejecutan tus dependencias.
 
@@ -109,5 +109,14 @@ Fuentes:
 - **Snyk:** tiene plan gratuito, pero exige cuenta y token, y es un producto comercial.
 - **Trivy:** se usa aquí como caso de estudio, no como herramienta.
 - **SonarQube Community Build:** no hace taint analysis, así que no detecta inyecciones por flujo de datos. Además necesita un servidor y no analiza ramas ni pull requests.
+
+## Consejos finales
+
+**Fijar por SHA sin un bot que actualice te deja congelado.** Tarde o temprano usarás una versión con un CVE conocido. Elige un bot según tu plataforma:
+
+- **Dependabot** viene incluido en GitHub. En este repo está **desactivado a propósito**, para que no corrija `main` antes de la demo. El ejemplo está en [`docs/dependabot.yml`](docs/dependabot.yml); para activarlo, cópialo a `.github/dependabot.yml`. Las alertas de dependencias vulnerables se activan aparte, en **Settings → Code security**.
+- **[Renovate](https://github.com/renovatebot/renovate)** es open source y funciona en GitHub, GitLab, Bitbucket y Azure DevOps. Úsalo si tu equipo no está en GitHub.
+
+Cualquiera de los dos solo te avisa de que existe una versión nueva, no de que sea segura. Si un atacante publica una versión maliciosa, el bot te la propone igual. Por eso cada PR pasa por el pipeline y por una revisión humana, y no se mezcla automáticamente.
 
 > ⚠️ El token de `app/src/config.js` en `main` es **falso**: solo tiene el formato de un GitHub PAT. La app de `main` es vulnerable a propósito; no la despliegues.

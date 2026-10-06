@@ -1,0 +1,34 @@
+# EJEMPLO, NO ESTÁ ACTIVO: Dependabot solo lee este archivo en .github/dependabot.yml.
+# Para activarlo en tu fork: cp docs/dependabot.yml .github/dependabot.yml
+#
+# Fijar por SHA y digest congela versiones; un bot de actualización propone los PR
+# para que no cambiemos seguridad por desactualización. Revisa cada PR: el bot no
+# verifica que la versión nueva sea segura, solo que existe.
+version: 2
+updates:
+  # SHA de las acciones en .github/workflows/; también actualiza el comentario "# vX.Y.Z".
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      acciones:
+        patterns: ["*"]
+
+  # Imágenes de las herramientas del pipeline (ver el comentario en ese archivo).
+  - package-ecosystem: docker
+    directory: /.github/herramientas
+    schedule:
+      interval: weekly
+
+  # Base del Dockerfile de la app.
+  - package-ecosystem: docker
+    directory: /infra
+    schedule:
+      interval: weekly
+
+  # Ojo en la demo: en main propondría subir lodash y corregiría el hallazgo plantado.
+  - package-ecosystem: npm
+    directory: /app
+    schedule:
+      interval: weekly
