@@ -11,15 +11,24 @@ Author:      Julio Sarango
 Email:       jsarangoq@gmail.com
 Date:        2026-10-06T01:46:48Z
 Fingerprint: 3bcb78f389d1b91685cfd7c70117015deeea1b2e:app/src/config.js:github-pat:6
+Link:        https://github.com/juliosarango/appsec/blob/3bcb78f389d1b91685cfd7c70117015deeea1b2e/app/src/config.js#L6
 
-[90m1:51AM[0m [32mINF[0m [1m4 commits scanned.[0m
-[90m1:51AM[0m [32mINF[0m [1mscanned ~59108 bytes (59.11 KB) in 48.5ms[0m
-[90m1:51AM[0m [33mWRN[0m [1mleaks found: 1[0m
+[90m3:45AM[0m [32mINF[0m [1m11 commits scanned.[0m
+[90m3:45AM[0m [32mINF[0m [1mscanned ~2280823 bytes (2.28 MB) in 48.3ms[0m
+[90m3:45AM[0m [33mWRN[0m [1mleaks found: 1[0m
 ### Gitleaks
 
 | Secretos |
 |---|
 | 1 |
+
+<details><summary>Ver 1 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| Secreto | github-pat | `app/src/config.js:6 (commit 3bcb78f)` |
+
+</details>
 
 [1;31m✗ gitleaks: 1 hallazgo(s) rompen el build[0m
 
@@ -207,13 +216,30 @@ TOTAL: 10
 |---|---|---|---|---|
 | 0 | 2 | 6 | 2 | 0 |
 
+<details><summary>Ver 10 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| HIGH | Missing User Instruction | `infra/Dockerfile:5` |
+| HIGH | Privileged Containers Enabled | `infra/docker-compose.yml:8` |
+| MEDIUM | Container Capabilities Unrestricted | `infra/docker-compose.yml:3` |
+| MEDIUM | Container Traffic Not Bound To Host Interface | `infra/docker-compose.yml:9` |
+| MEDIUM | Healthcheck Not Set | `infra/docker-compose.yml:3` |
+| MEDIUM | Image Version Using 'latest' | `infra/Dockerfile:5` |
+| MEDIUM | Privileged Ports Mapped In Container | `infra/docker-compose.yml:9` |
+| MEDIUM | Security Opt Not Set | `infra/docker-compose.yml:3` |
+| LOW | Exposing Port 22 (SSH) | `infra/Dockerfile:11` |
+| LOW | Healthcheck Instruction Missing | `infra/Dockerfile:5` |
+
+</details>
+
 [1;31m✗ kics: 2 hallazgo(s) rompen el build[0m
 
 [1;36m━━ 3/5 Dependencias · OSV-Scanner (app/package-lock.json) ━━[0m
 Scanning dir app
 Starting filesystem walk for root: /
 Scanned /repo/app/package-lock.json file and found 67 packages
-End status: 3 dirs visited, 8 inodes visited, 1 Extract calls, 1.589367ms elapsed, 1.589497ms wall time
+End status: 3 dirs visited, 8 inodes visited, 1 Extract calls, 2.222269ms elapsed, 2.22237ms wall time
 
 Total 1 package affected by 3 known vulnerabilities (0 Critical, 1 High, 2 Medium, 0 Low, 0 Unknown) from 1 ecosystem.
 3 vulnerabilities can be fixed.
@@ -232,6 +258,16 @@ Total 1 package affected by 3 known vulnerabilities (0 Critical, 1 High, 2 Mediu
 | Crítica | Alta | Media | Baja | Sin CVSS |
 |---|---|---|---|---|
 | 0 | 1 | 2 | 0 | 0 |
+
+<details><summary>Ver 3 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| CVSS 8.1 | lodash@4.17.20: CVE-2021-23337, CVE-2026-4800 | `app/package-lock.json` |
+| CVSS 6.9 | lodash@4.17.20: CVE-2025-13465, CVE-2026-2950 | `app/package-lock.json` |
+| CVSS 5.3 | lodash@4.17.20: CVE-2020-28500 | `app/package-lock.json` |
+
+</details>
 
 [1;31m✗ osv: 1 hallazgo(s) rompen el build[0m
 
@@ -324,6 +360,19 @@ Ran 184 rules on 3 files: 6 findings.
 |---|---|---|
 | 5 | 1 | 0 |
 
+<details><summary>Ver 6 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| ERROR | tainted-sql-string | `app/src/server.js:13` |
+| ERROR | generic_os_command_exec | `app/src/server.js:20` |
+| ERROR | eval_nodejs | `app/src/server.js:29` |
+| ERROR | code-string-concat | `app/src/server.js:29` |
+| ERROR | express_xss | `app/src/server.js:36` |
+| WARNING | direct-response-write | `app/src/server.js:36` |
+
+</details>
+
 [1;31m✗ semgrep: 5 hallazgo(s) rompen el build[0m
 
 [1;36m━━ 5/5 DAST · ZAP baseline contra OWASP Juice Shop ━━[0m
@@ -394,33 +443,33 @@ WARN-NEW: Content Security Policy (CSP) Header Not Set [10038] x 11
 	http://localhost:3000/sitemap.xml (200 OK)
 	http://localhost:3000 (200 OK)
 	http://localhost:3000/ftp/encrypt.pyc (403 Forbidden)
-	http://localhost:3000/ftp/suspicious_errors.yml (403 Forbidden)
+	http://localhost:3000/ftp/coupons_2013.md.bak (403 Forbidden)
 WARN-NEW: Deprecated Feature Policy Header Set [10063] x 12 
 	http://localhost:3000/ (200 OK)
-	http://localhost:3000/sitemap.xml (200 OK)
-	http://localhost:3000 (200 OK)
 	http://localhost:3000/polyfills.js (200 OK)
-	http://localhost:3000/scripts.js (200 OK)
-WARN-NEW: Timestamp Disclosure - Unix [10096] x 18 
-	http://localhost:3000/ (200 OK)
-	http://localhost:3000/ (200 OK)
-	http://localhost:3000/sitemap.xml (200 OK)
-	http://localhost:3000/sitemap.xml (200 OK)
 	http://localhost:3000 (200 OK)
-WARN-NEW: Cross-Domain Misconfiguration [10098] x 12 
-	http://localhost:3000/ (200 OK)
-	http://localhost:3000/assets/public/favicon_js.ico (200 OK)
-	http://localhost:3000/robots.txt (200 OK)
-	http://localhost:3000/styles.css (200 OK)
 	http://localhost:3000/sitemap.xml (200 OK)
+	http://localhost:3000/scripts.js (200 OK)
+WARN-NEW: Timestamp Disclosure - Unix [10096] x 14 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/styles.css (200 OK)
+	http://localhost:3000/styles.css (200 OK)
+	http://localhost:3000/styles.css (200 OK)
+WARN-NEW: Cross-Domain Misconfiguration [10098] x 11 
+	http://localhost:3000/ (200 OK)
+	http://localhost:3000/robots.txt (200 OK)
+	http://localhost:3000/assets/public/favicon_js.ico (200 OK)
+	http://localhost:3000/styles.css (200 OK)
+	http://localhost:3000/scripts.js (200 OK)
 WARN-NEW: Dangerous JS Functions [10110] x 1 
 	http://localhost:3000/main.js (200 OK)
-WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 12 
+WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 10 
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000/ (200 OK)
-	http://localhost:3000/sitemap.xml (200 OK)
-	http://localhost:3000/sitemap.xml (200 OK)
 	http://localhost:3000 (200 OK)
+	http://localhost:3000 (200 OK)
+	http://localhost:3000/sitemap.xml (200 OK)
 FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 6	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
 ### ZAP baseline (no bloquea)
 
@@ -428,7 +477,25 @@ FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 6	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
 |---|---|---|---|---|
 | 0 | 2 | 5 | 4 | 0 |
 
-[1;32m✓ zap: pasa la política[0m
+<details><summary>Ver 11 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| Medium | Content Security Policy (CSP) Header Not Set [10038] | `ej.: http://localhost:3000` |
+| Medium | Cross-Domain Misconfiguration [10098] | `ej.: http://localhost:3000/` |
+| Low | Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] | `ej.: http://localhost:3000` |
+| Low | Cross-Origin-Opener-Policy Header Missing or Invalid [90004] | `ej.: http://localhost:3000` |
+| Low | Dangerous JS Functions [10110] | `ej.: http://localhost:3000/main.js` |
+| Low | Deprecated Feature Policy Header Set [10063] | `ej.: http://localhost:3000` |
+| Low | Timestamp Disclosure - Unix [10096] | `ej.: http://localhost:3000/` |
+| Informational | Modern Web Application [10109] | `ej.: http://localhost:3000` |
+| Informational | Non-Storable Content [10049] | `ej.: http://localhost:3000/ftp/encrypt.pyc` |
+| Informational | Storable and Cacheable Content [10049] | `ej.: http://localhost:3000/robots.txt` |
+| Informational | Storable but Non-Cacheable Content [10049] | `ej.: http://localhost:3000` |
+
+</details>
+
+[1;34mℹ zap: solo reporta, no bloquea (en CI corre solo si las 4 etapas estáticas pasan)[0m
 Reporte HTML: reportes/main/zap/zap.html
 
 [1;36m━━ Resumen guardado en reportes/main/resumen.md ━━[0m

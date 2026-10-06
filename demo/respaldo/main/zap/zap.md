@@ -31,7 +31,7 @@ ZAP by [Checkmarx](https://checkmarx.com/).
 | Info | Informational | http://localhost:3000 | Percentage of endpoints with content type text/plain | 1 % |
 | Info | Informational | http://localhost:3000 | Percentage of endpoints with method GET | 100 % |
 | Info | Informational | http://localhost:3000 | Count of total endpoints | 65    |
-| Info | Informational | http://localhost:3000 | Percentage of slow responses | 19 % |
+| Info | Informational | http://localhost:3000 | Percentage of slow responses | 4 % |
 
 
 
@@ -45,13 +45,13 @@ ZAP by [Checkmarx](https://checkmarx.com/).
 | --- | --- | --- |
 | Content Security Policy (CSP) Header Not Set | Medium | Systemic |
 | Cross-Domain Misconfiguration | Medium | Systemic |
-| Cross-Origin-Embedder-Policy Header Missing or Invalid | Low | Systemic |
-| Cross-Origin-Opener-Policy Header Missing or Invalid | Low | Systemic |
+| Cross-Origin-Embedder-Policy Header Missing or Invalid | Low | 5 |
+| Cross-Origin-Opener-Policy Header Missing or Invalid | Low | 5 |
 | Dangerous JS Functions | Low | 1 |
 | Deprecated Feature Policy Header Set | Low | Systemic |
 | Timestamp Disclosure - Unix | Low | Systemic |
 | Modern Web Application | Informational | Systemic |
-| Non-Storable Content | Informational | 2 |
+| Non-Storable Content | Informational | 1 |
 | Storable and Cacheable Content | Informational | 1 |
 | Storable but Non-Cacheable Content | Informational | Systemic |
 
@@ -86,15 +86,15 @@ Content Security Policy (CSP) is an added layer of security that helps to detect
   * Attack: ``
   * Evidence: ``
   * Other Info: ``
-* URL: http://localhost:3000/ftp/encrypt.pyc
-  * Node Name: `http://localhost:3000/ftp/encrypt.pyc`
+* URL: http://localhost:3000/ftp/coupons_2013.md.bak
+  * Node Name: `http://localhost:3000/ftp/coupons_2013.md.bak`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
   * Evidence: ``
   * Other Info: ``
-* URL: http://localhost:3000/ftp/suspicious_errors.yml
-  * Node Name: `http://localhost:3000/ftp/suspicious_errors.yml`
+* URL: http://localhost:3000/ftp/encrypt.pyc
+  * Node Name: `http://localhost:3000/ftp/encrypt.pyc`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
@@ -165,8 +165,8 @@ Web browser data loading may be possible, due to a Cross Origin Resource Sharing
   * Attack: ``
   * Evidence: `Access-Control-Allow-Origin: *`
   * Other Info: `The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.`
-* URL: http://localhost:3000/sitemap.xml
-  * Node Name: `http://localhost:3000/sitemap.xml`
+* URL: http://localhost:3000/scripts.js
+  * Node Name: `http://localhost:3000/scripts.js`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
@@ -232,8 +232,8 @@ Cross-Origin-Embedder-Policy header is a response header that prevents a documen
   * Attack: ``
   * Evidence: ``
   * Other Info: ``
-* URL: http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13
-  * Node Name: `http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13`
+* URL: http://localhost:3000/juice-shop/build/routes/styles.css
+  * Node Name: `http://localhost:3000/juice-shop/build/routes/styles.css`
   * Method: `GET`
   * Parameter: `Cross-Origin-Embedder-Policy`
   * Attack: ``
@@ -247,8 +247,8 @@ Cross-Origin-Embedder-Policy header is a response header that prevents a documen
   * Evidence: ``
   * Other Info: ``
 
-Instances: Systemic
 
+Instances: 5
 
 ### Solution
 
@@ -299,8 +299,8 @@ Cross-Origin-Opener-Policy header is a response header that allows a site to con
   * Attack: ``
   * Evidence: ``
   * Other Info: ``
-* URL: http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13
-  * Node Name: `http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13`
+* URL: http://localhost:3000/juice-shop/build/routes/styles.css
+  * Node Name: `http://localhost:3000/juice-shop/build/routes/styles.css`
   * Method: `GET`
   * Parameter: `Cross-Origin-Opener-Policy`
   * Attack: ``
@@ -314,8 +314,8 @@ Cross-Origin-Opener-Policy header is a response header that allows a site to con
   * Evidence: ``
   * Other Info: ``
 
-Instances: Systemic
 
+Instances: 5
 
 ### Solution
 
@@ -449,13 +449,6 @@ Ensure that your web server, application server, load balancer, etc. is configur
 
 A timestamp was disclosed by the application/web server. - Unix
 
-* URL: http://localhost:3000
-  * Node Name: `http://localhost:3000`
-  * Method: `GET`
-  * Parameter: ``
-  * Attack: ``
-  * Evidence: `1666666667`
-  * Other Info: `1666666667, which evaluates to: 2022-10-25 02:57:47.`
 * URL: http://localhost:3000/
   * Node Name: `http://localhost:3000/`
   * Method: `GET`
@@ -470,20 +463,27 @@ A timestamp was disclosed by the application/web server. - Unix
   * Attack: ``
   * Evidence: `1839622642`
   * Other Info: `1839622642, which evaluates to: 2028-04-17 22:17:22.`
-* URL: http://localhost:3000/sitemap.xml
-  * Node Name: `http://localhost:3000/sitemap.xml`
+* URL: http://localhost:3000/styles.css
+  * Node Name: `http://localhost:3000/styles.css`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
-  * Evidence: `1666666667`
-  * Other Info: `1666666667, which evaluates to: 2022-10-25 02:57:47.`
-* URL: http://localhost:3000/sitemap.xml
-  * Node Name: `http://localhost:3000/sitemap.xml`
+  * Evidence: `1528301887`
+  * Other Info: `1528301887, which evaluates to: 2018-06-06 16:18:07.`
+* URL: http://localhost:3000/styles.css
+  * Node Name: `http://localhost:3000/styles.css`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
-  * Evidence: `1839622642`
-  * Other Info: `1839622642, which evaluates to: 2028-04-17 22:17:22.`
+  * Evidence: `1578947368`
+  * Other Info: `1578947368, which evaluates to: 2020-01-13 20:29:28.`
+* URL: http://localhost:3000/styles.css
+  * Node Name: `http://localhost:3000/styles.css`
+  * Method: `GET`
+  * Parameter: ``
+  * Attack: ``
+  * Evidence: `1602209945`
+  * Other Info: `1602209945, which evaluates to: 2020-10-09 02:19:05.`
 
 Instances: Systemic
 
@@ -551,8 +551,8 @@ The application appears to be a modern web application. If you need to explore i
       })});
   </script>`
   * Other Info: `No links have been found while there are scripts, which is an indication that this is a modern web application.`
-* URL: http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13
-  * Node Name: `http://localhost:3000/juice-shop/build/routes/fileServer.js:52:13`
+* URL: http://localhost:3000/juice-shop/build/routes/polyfills.js
+  * Node Name: `http://localhost:3000/juice-shop/build/routes/polyfills.js`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
@@ -569,8 +569,8 @@ The application appears to be a modern web application. If you need to explore i
       })});
   </script>`
   * Other Info: `No links have been found while there are scripts, which is an indication that this is a modern web application.`
-* URL: http://localhost:3000/juice-shop/node_modules/express/lib/router/layer.js:95:5
-  * Node Name: `http://localhost:3000/juice-shop/node_modules/express/lib/router/layer.js:95:5`
+* URL: http://localhost:3000/juice-shop/build/routes/styles.css
+  * Node Name: `http://localhost:3000/juice-shop/build/routes/styles.css`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``
@@ -637,16 +637,9 @@ The response contents are not storable by caching components such as proxy serve
   * Attack: ``
   * Evidence: `403`
   * Other Info: ``
-* URL: http://localhost:3000/ftp/suspicious_errors.yml
-  * Node Name: `http://localhost:3000/ftp/suspicious_errors.yml`
-  * Method: `GET`
-  * Parameter: ``
-  * Attack: ``
-  * Evidence: `403`
-  * Other Info: ``
 
 
-Instances: 2
+Instances: 1
 
 ### Solution
 
@@ -753,8 +746,8 @@ The response contents are storable by caching components such as proxy servers, 
   * Attack: ``
   * Evidence: `max-age=0`
   * Other Info: ``
-* URL: http://localhost:3000/sitemap.xml
-  * Node Name: `http://localhost:3000/sitemap.xml`
+* URL: http://localhost:3000/polyfills.js
+  * Node Name: `http://localhost:3000/polyfills.js`
   * Method: `GET`
   * Parameter: ``
   * Attack: ``

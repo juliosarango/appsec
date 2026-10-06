@@ -1,8 +1,8 @@
 
 [1;36m━━ 1/5 Secretos · Gitleaks (historial completo de git) ━━[0m
-[90m1:52AM[0m [32mINF[0m [1m4 commits scanned.[0m
-[90m1:52AM[0m [32mINF[0m [1mscanned ~59108 bytes (59.11 KB) in 57.8ms[0m
-[90m1:52AM[0m [32mINF[0m [1mno leaks found[0m
+[90m3:46AM[0m [32mINF[0m [1m11 commits scanned.[0m
+[90m3:46AM[0m [32mINF[0m [1mscanned ~2280823 bytes (2.28 MB) in 60.2ms[0m
+[90m3:46AM[0m [32mINF[0m [1mno leaks found[0m
 ### Gitleaks
 
 | Secretos |
@@ -61,7 +61,7 @@ TOTAL: 0
 Scanning dir app
 Starting filesystem walk for root: /
 Scanned /repo/app/package-lock.json file and found 67 packages
-End status: 3 dirs visited, 8 inodes visited, 1 Extract calls, 1.892968ms elapsed, 1.893078ms wall time
+End status: 3 dirs visited, 8 inodes visited, 1 Extract calls, 1.386717ms elapsed, 1.386818ms wall time
 
 No issues found
 ### OSV-Scanner
@@ -170,13 +170,13 @@ PASS: WSDL File Detection [90030]
 PASS: Loosely Scoped Cookie [90033]
 IGNORE-NEW: Dangerous JS Functions [10110] x 1 
 	http://localhost:3000/main.js (200 OK)
-WARN-NEW: Content Security Policy (CSP) Header Not Set [10038] x 12 
+WARN-NEW: Content Security Policy (CSP) Header Not Set [10038] x 11 
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000 (200 OK)
 	http://localhost:3000/sitemap.xml (200 OK)
-	http://localhost:3000/ftp/eastere.gg (403 Forbidden)
 	http://localhost:3000/ftp/encrypt.pyc (403 Forbidden)
-WARN-NEW: Deprecated Feature Policy Header Set [10063] x 12 
+	http://localhost:3000/ftp/eastere.gg (403 Forbidden)
+WARN-NEW: Deprecated Feature Policy Header Set [10063] x 11 
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000 (200 OK)
 	http://localhost:3000/sitemap.xml (200 OK)
@@ -191,10 +191,10 @@ WARN-NEW: Timestamp Disclosure - Unix [10096] x 18
 WARN-NEW: Cross-Domain Misconfiguration [10098] x 11 
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000/robots.txt (200 OK)
-	http://localhost:3000/styles.css (200 OK)
 	http://localhost:3000/assets/public/favicon_js.ico (200 OK)
+	http://localhost:3000/styles.css (200 OK)
 	http://localhost:3000 (200 OK)
-WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 12 
+WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 10 
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000/ (200 OK)
 	http://localhost:3000 (200 OK)
@@ -205,9 +205,26 @@ FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 5	WARN-INPROG: 0	INFO: 0	IGNORE: 1	PASS: 60
 
 | Alta | Media | Baja | Info | Ignoradas (rules.tsv) |
 |---|---|---|---|---|
-| 0 | 2 | 4 | 4 | 1 |
+| 0 | 2 | 4 | 3 | 1 |
 
-[1;32m✓ zap: pasa la política[0m
+<details><summary>Ver 10 hallazgo(s)</summary>
+
+| Severidad | Hallazgo | Ubicación |
+|---|---|---|
+| Medium | Content Security Policy (CSP) Header Not Set [10038] | `ej.: http://localhost:3000` |
+| Medium | Cross-Domain Misconfiguration [10098] | `ej.: http://localhost:3000` |
+| Low | Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] | `ej.: http://localhost:3000` |
+| Low | Cross-Origin-Opener-Policy Header Missing or Invalid [90004] | `ej.: http://localhost:3000` |
+| Low | Dangerous JS Functions [10110] (ignorada) | `ej.: http://localhost:3000/main.js` |
+| Low | Deprecated Feature Policy Header Set [10063] | `ej.: http://localhost:3000` |
+| Low | Timestamp Disclosure - Unix [10096] | `ej.: http://localhost:3000` |
+| Informational | Modern Web Application [10109] | `ej.: http://localhost:3000` |
+| Informational | Storable and Cacheable Content [10049] | `ej.: http://localhost:3000/robots.txt` |
+| Informational | Storable but Non-Cacheable Content [10049] | `ej.: http://localhost:3000` |
+
+</details>
+
+[1;34mℹ zap: solo reporta, no bloquea (en CI corre solo si las 4 etapas estáticas pasan)[0m
 Reporte HTML: reportes/fix/zap/zap.html
 
 [1;36m━━ Resumen guardado en reportes/fix/resumen.md ━━[0m
